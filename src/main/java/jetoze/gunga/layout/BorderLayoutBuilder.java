@@ -8,6 +8,8 @@ import static java.awt.BorderLayout.WEST;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -15,6 +17,7 @@ import javax.swing.RootPaneContainer;
 
 public final class BorderLayoutBuilder {
 
+    private final Map<String, JComponent> components = new HashMap<>();
     private final BorderLayout layout;
     
     BorderLayoutBuilder() {
@@ -71,21 +74,25 @@ public final class BorderLayoutBuilder {
     
     private BorderLayoutBuilder add(Object object, String where) {
         JComponent component = Layouts.toComponent(object);
-        layout.addLayoutComponent(component, where);
+        components.put(where, component);
         return this;
     }
     
     public JPanel build() {
-        return new JPanel(layout);
+        return install(new JPanel(layout));
+    }
+    
+    private <T extends Container> T install(T container) {
+        components.forEach((constraint, component) -> container.add(component, constraint));
+        return container;
     }
     
     public <T extends Container> T buildIn(T container) {
         container.setLayout(layout);
-        return container;
+        return install(container);
     }
     
     public void buildAsContent(RootPaneContainer rootPaneContainer) {
         buildIn(rootPaneContainer.getContentPane());
-    }
-    
+    }    
 }
