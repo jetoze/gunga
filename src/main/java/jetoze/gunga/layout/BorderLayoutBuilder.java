@@ -88,6 +88,8 @@ public final class BorderLayoutBuilder {
     }
     
     public <T extends Container> T buildIn(T container) {
+        container.removeAll();
+        container.invalidate();
         container.setLayout(layout);
         return install(container);
     }
