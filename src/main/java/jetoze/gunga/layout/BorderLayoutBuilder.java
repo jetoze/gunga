@@ -7,9 +7,11 @@ import static java.awt.BorderLayout.SOUTH;
 import static java.awt.BorderLayout.WEST;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.RootPaneContainer;
 
 public final class BorderLayoutBuilder {
 
@@ -77,9 +79,13 @@ public final class BorderLayoutBuilder {
         return new JPanel(layout);
     }
     
-    public JPanel buildIn(JPanel panel) {
-        panel.setLayout(layout);
-        return panel;
+    public <T extends Container> T buildIn(T container) {
+        container.setLayout(layout);
+        return container;
+    }
+    
+    public void buildAsContent(RootPaneContainer rootPaneContainer) {
+        buildIn(rootPaneContainer.getContentPane());
     }
     
 }
