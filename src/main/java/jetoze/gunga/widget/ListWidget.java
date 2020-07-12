@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -19,7 +21,7 @@ import jetoze.gunga.selection.SelectionSource;
 import jetoze.gunga.selection.Selections;
 import jetoze.gunga.selection.Selections.IndexedSelectionBuilder;
 
-public class ListWidget<T> implements SelectionSource<T> {
+public class ListWidget<T> implements Widget, SelectionSource<T> {
     // TODO: Add methods for selection mode, and of course something that allows us to add
     // a ListWidget to a layout.
     
@@ -40,6 +42,16 @@ public class ListWidget<T> implements SelectionSource<T> {
         list.addListSelectionListener(new SelectionDispatcher());
     }
     
+    @Override
+    public JComponent getUi() {
+        return new JScrollPane(list);
+    }
+
+    @Override
+    public void requestFocus() {
+        list.requestFocusInWindow();
+    }
+
     public ListWidgetModel<T> getModel() {
         return (ListWidgetModel<T>) list.getModel();
     }
@@ -55,6 +67,10 @@ public class ListWidget<T> implements SelectionSource<T> {
     
     public void setVisibleRowCount(int rows) {
         list.setVisibleRowCount(rows);
+    }
+    
+    public void ensureIndexIsVisible(int index) {
+        list.ensureIndexIsVisible(index);
     }
 
     @Override

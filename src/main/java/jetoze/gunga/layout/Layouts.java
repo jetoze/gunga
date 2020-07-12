@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import jetoze.gunga.widget.Widget;
+
 public final class Layouts {
 
     public static BorderLayoutBuilder border() {
@@ -21,6 +23,8 @@ public final class Layouts {
         requireNonNull(o);
         if (o instanceof JComponent) {
             return (JComponent) o;
+        } else if (o instanceof Widget) {
+            return ((Widget) o).getUi();
         } else if (o instanceof String) {
             return new JLabel(o.toString());
         } else if (o instanceof Action) {
