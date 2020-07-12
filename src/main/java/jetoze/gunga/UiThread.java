@@ -4,8 +4,14 @@ import static com.google.common.base.Preconditions.*;
 import static java.util.Objects.*;
 
 import java.awt.EventQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+
+import com.google.common.base.Throwables;
 
 /**
  * Utilities related to the Event Dispatching Thread, referred to here as the "UI thread", 
@@ -66,6 +72,34 @@ public final class UiThread {
         checkArgument(!message.isBlank(), "message cannot be blank");
         checkState(isUiThread(), message);
     }
+    
+    public static <T> void offload(Callable<T> work, Consumer<? super T> consumer) {
+        requireNonNull(work);
+        requireNonNull(consumer);
+        new SwingWorker<T, Void>() {
+
+            @Override
+            protected T doInBackground() throws Exception {
+                return work.call();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    T result = get();
+                    consumer.accept(result);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    Throwables.throwIfUnchecked(cause);
+                    throw new RuntimeException(cause);
+                }
+            }
+        }.execute();
+    }
+    
     
     private UiThread() {/**/}
 }
