@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -23,8 +24,18 @@ import jetoze.gunga.selection.Selections;
 import jetoze.gunga.selection.Selections.IndexedSelectionBuilder;
 
 public class ListWidget<T> implements Widget, SelectionSource<T> {
-    // TODO: Add methods for selection mode, and of course something that allows us to add
-    // a ListWidget to a layout.
+    
+    public static enum SelectionMode {
+        SINGLE(ListSelectionModel.SINGLE_SELECTION),
+        SINGLE_INTERVAL(ListSelectionModel.SINGLE_INTERVAL_SELECTION),
+        MULTPLE_INTERVAL(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        
+        private final int value;
+        
+        private SelectionMode(int value) {
+            this.value = value;
+        }
+    }
     
     private final JList<T> list;
     private final List<SelectionListener<T>> selectionListeners = new ArrayList<>();
@@ -51,6 +62,9 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     @Override
     public void requestFocus() {
         list.requestFocusInWindow();
+        if (getSelection().isEmpty()) {
+            selectFirst();
+        }
     }
 
     public ListWidgetModel<T> getModel() {
@@ -77,6 +91,10 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     
     public void ensureIndexIsVisible(int index) {
         list.ensureIndexIsVisible(index);
+    }
+    
+    public void setSelectionMode(SelectionMode mode) {
+        list.setSelectionMode(mode.value);
     }
 
     @Override
@@ -108,6 +126,12 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
             ++n;
         }
         list.setSelectedIndices(indexes);
+    }
+    
+    public void selectFirst() {
+        if (getModel().getSize() > 0) {
+            list.setSelectedIndex(0);
+        }
     }
 
     @Override
