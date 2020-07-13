@@ -100,6 +100,34 @@ public final class UiThread {
         }.execute();
     }
     
+    public static void offload(Runnable work, Runnable whenDone) {
+        requireNonNull(work);
+        requireNonNull(whenDone);
+        new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                work.run();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    whenDone.run();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    Throwables.throwIfUnchecked(cause);
+                    throw new RuntimeException(cause);
+                }
+            }
+        }.execute();
+    }
+    
     
     private UiThread() {/**/}
 }
