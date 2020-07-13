@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -63,6 +64,11 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     
     public void setFilter(@Nullable Predicate<? super T> filter) {
         getModel().setFilter(filter);
+    }
+    
+    public void setCellRenderer(ListCellRenderer<? super T> renderer) {
+        requireNonNull(renderer);
+        list.setCellRenderer(renderer);
     }
     
     public void setVisibleRowCount(int rows) {
