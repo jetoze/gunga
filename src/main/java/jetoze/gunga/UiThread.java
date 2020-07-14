@@ -87,7 +87,10 @@ public final class UiThread {
             protected void done() {
                 try {
                     T result = get();
-                    consumer.accept(result);
+                    // TODO: Add an option for accepting null results as well.
+                    if (result != null) {
+                        consumer.accept(result);
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
