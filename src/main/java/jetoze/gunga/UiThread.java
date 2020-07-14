@@ -1,7 +1,8 @@
 package jetoze.gunga;
 
-import static com.google.common.base.Preconditions.*;
-import static java.util.Objects.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
@@ -10,8 +11,6 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-
-import com.google.common.base.Throwables;
 
 /**
  * Utilities related to the Event Dispatching Thread, referred to here as the "UI thread", 
@@ -73,9 +72,31 @@ public final class UiThread {
         checkState(isUiThread(), message);
     }
     
+    // TODO: Too many offload options. Introduce some sort of builder for this?
+    
     public static <T> void offload(Callable<T> work, Consumer<? super T> consumer) {
+        offload(work, consumer, Throwable::printStackTrace);
+    }
+    
+    public static <T> void offload(Callable<T> work, 
+                                   Consumer<? super T> consumer,
+                                   boolean acceptNullResults) {
+        offload(work, consumer, acceptNullResults, Throwable::printStackTrace);
+    }
+
+    public static <T> void offload(Callable<T> work, 
+                                   Consumer<? super T> consumer,
+                                   Consumer<? super Throwable> exceptionHandler) {
+        offload(work, consumer, false, exceptionHandler);
+    }
+    
+    public static <T> void offload(Callable<T> work, 
+                                   Consumer<? super T> consumer,
+                                   boolean acceptNullResults,
+                                   Consumer<? super Throwable> exceptionHandler) {
         requireNonNull(work);
         requireNonNull(consumer);
+        requireNonNull(exceptionHandler);
         new SwingWorker<T, Void>() {
 
             @Override
@@ -87,23 +108,28 @@ public final class UiThread {
             protected void done() {
                 try {
                     T result = get();
-                    // TODO: Add an option for ignoring null results.
-                    consumer.accept(result);
+                    if (result != null || acceptNullResults) {
+                        consumer.accept(result);
+                    }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    throw new RuntimeException(e);
+                    exceptionHandler.accept(e);
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
-                    Throwables.throwIfUnchecked(cause);
-                    throw new RuntimeException(cause);
+                    exceptionHandler.accept(cause);
                 }
             }
         }.execute();
     }
     
     public static void offload(Runnable work, Runnable whenDone) {
+        offload(work, whenDone, Throwable::printStackTrace);
+    }
+    
+    public static void offload(Runnable work, Runnable whenDone, Consumer<? super Throwable> exceptionHandler) {
         requireNonNull(work);
         requireNonNull(whenDone);
+        requireNonNull(exceptionHandler);
         new SwingWorker<Void, Void>() {
 
             @Override
@@ -119,11 +145,10 @@ public final class UiThread {
                     whenDone.run();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    throw new RuntimeException(e);
+                    exceptionHandler.accept(e);
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
-                    Throwables.throwIfUnchecked(cause);
-                    throw new RuntimeException(cause);
+                    exceptionHandler.accept(cause);
                 }
             }
         }.execute();
