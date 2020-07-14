@@ -89,6 +89,10 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
         list.setVisibleRowCount(rows);
     }
     
+    public void setEnabled(boolean enabled) {
+        list.setEnabled(enabled);
+    }
+    
     public void ensureIndexIsVisible(int index) {
         list.ensureIndexIsVisible(index);
     }
