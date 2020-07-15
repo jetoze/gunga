@@ -121,6 +121,37 @@ public final class UiThread {
             }
         }.execute();
     }
+
+    public static void offload(Callable<Void> work, Runnable whenDone) {
+        offload(work, whenDone, Throwable::printStackTrace);
+    }
+    
+    public static void offload(Callable<Void> work, Runnable whenDone, Consumer<? super Throwable> exceptionHandler) {
+        requireNonNull(work);
+        requireNonNull(whenDone);
+        requireNonNull(exceptionHandler);
+        new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                return work.call();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    whenDone.run();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    exceptionHandler.accept(e);
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    exceptionHandler.accept(cause);
+                }
+            }
+        }.execute();
+    }
     
     public static void offload(Runnable work, Runnable whenDone) {
         offload(work, whenDone, Throwable::printStackTrace);
