@@ -18,6 +18,7 @@
     <guava.version>29.0-jre</guava.version>
     <mockito.version>2.7.2</mockito.version>
     <samling.version>0.0.1-SNAPSHOT</samling.version>
+    <attribut.version>0.0.1-SNAPSHOT</attribut.version>
   </properties>
 
   <dependencies>
@@ -30,6 +31,11 @@
       <groupId>jetoze</groupId>
       <artifactId>samling</artifactId>
       <version>${samling.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jetoze</groupId>
+      <artifactId>attribut</artifactId>
+      <version>${attribut.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
