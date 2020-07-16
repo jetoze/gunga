@@ -1,26 +1,22 @@
 package jetoze.gunga.widget;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 public class TextFieldWidget implements TextWidget {
 
     private final JTextField textField;
     private FocusListener selectAllWhenFocusedListener;
-    private DocumentListener binding;
     
     public TextFieldWidget() {
-        this(null, 0);
+        this("", 0);
     }
     
     public TextFieldWidget(String text) {
@@ -28,7 +24,7 @@ public class TextFieldWidget implements TextWidget {
     }
     
     public TextFieldWidget(int columns) {
-        this(null, columns);
+        this("", columns);
     }
     
     public TextFieldWidget(String text, int columns) {
