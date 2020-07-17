@@ -14,7 +14,7 @@ public class BooleanBinding extends AbstractBinding<Boolean> {
         return new BooleanBinding(property, ui);
     }
 
-    public static BooleanBinding bindAndSync(Property<Boolean> property, CheckBoxWidget ui) {
+    public static BooleanBinding bindAndSyncUi(Property<Boolean> property, CheckBoxWidget ui) {
         BooleanBinding binding = new BooleanBinding(property, ui);
         binding.syncUi();
         return binding;
