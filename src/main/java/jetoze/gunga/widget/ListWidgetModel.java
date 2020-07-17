@@ -1,11 +1,12 @@
 package jetoze.gunga.widget;
 
-import static com.google.common.base.Preconditions.*;
-import static java.util.Objects.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -30,8 +31,12 @@ public class ListWidgetModel<T> extends AbstractListModel<T> {
         this.elements = new ArrayList<>(elements);
     }
     
+    public Optional<Predicate<? super T>> getFilter() {
+        return Optional.ofNullable(filter);
+    }
+    
     public void setFilter(@Nullable Predicate<? super T> filter) {
-        if (filter == this.filter) {
+        if (Objects.equals(filter, this.filter)) {
             return;
         }
         this.filter = filter;

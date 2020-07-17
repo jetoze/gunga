@@ -23,7 +23,7 @@ public class TextBinding extends AbstractBinding<String> {
     private final TextWidget widget;
     private final DocumentListener uiListener;
     
-    public TextBinding(Property<String> property, TextWidget widget) {
+    private TextBinding(Property<String> property, TextWidget widget) {
         super(property);
         this.widget = requireNonNull(widget);
         this.uiListener = new DocumentContentChangeListener(e -> {
