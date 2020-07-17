@@ -22,7 +22,7 @@ public class CheckBoxWidget implements Widget {
     public CheckBoxWidget(String text, boolean selected) {
         checkBox = new JCheckBox(text, selected);
         checkBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+            if (e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED) {
                 notifyListeners();
             }
         });
