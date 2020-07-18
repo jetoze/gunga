@@ -9,6 +9,9 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 public final class KeyBindings {
+    // TODO: dispose() method. Keep track of existing bindings that we are replacing,
+    // and restore them as part of dispose().
+    
     private final InputMap inputMap;
     private final ActionMap actionMap;
 

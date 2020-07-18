@@ -1,11 +1,10 @@
-package jetoze.gunga;
+package jetoze.gunga.binding;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.function.Consumer;
 
 import jetoze.attribut.Property;
-import jetoze.gunga.binding.AbstractBinding;
 import jetoze.gunga.widget.CheckBoxWidget;
 
 public class BooleanBinding extends AbstractBinding<Boolean> {
