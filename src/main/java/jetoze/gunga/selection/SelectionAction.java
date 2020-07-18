@@ -14,7 +14,7 @@ public interface SelectionAction<T> extends Action {
 
     void setSelectionSource(SelectionSource<T> source);
 
-    public static <T> SelectionAction<T> forSingleItem(String name, Consumer<T> handler) {
+    public static <T> SelectionAction<T> forSingleItem(String name, Consumer<? super T> handler) {
         requireNonNull(handler);
         return new AbstractSelectionAction<T>(name) {
 
