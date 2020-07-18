@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -51,6 +52,23 @@ public final class UiThread {
     public static void runLater(Runnable job) {
         requireNonNull(job);
         EventQueue.invokeLater(job);
+    }
+    
+    /**
+     * Calls {@code consumer.accept(value}} if the calling thread is the UI thread,
+     * otherwise enqueues a job that calls {@code consumer.accept(value)} on the UI thread.
+     */
+    public static <T> void accept(Consumer<? super T> consumer, @Nullable T value) {
+        requireNonNull(consumer);
+        UiThread.run(() -> consumer.accept(value));
+    }
+    
+    /**
+     * Enqueues a job that will call {@code consumer.accept(value)} on the UI thread.
+     */
+    public static <T> void acceptLater(Consumer<? super T> consumer, @Nullable T value) {
+        requireNonNull(consumer);
+        UiThread.runLater(() -> consumer.accept(value));
     }
     
     /**
