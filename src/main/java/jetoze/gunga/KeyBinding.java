@@ -41,4 +41,17 @@ public final class KeyBinding {
         inputMap.put(keyStroke, actionMapKey);
         actionMap.put(actionMapKey, action);
     }
+    
+    public void dispose(InputMap inputMap, ActionMap actionMap) {
+        inputMap.remove(getKeyStroke());
+        actionMap.remove(actionMapKey);
+    }
+    
+    public KeyStroke getKeyStroke() {
+        return keyStroke;
+    }
+    
+    public Object getActionMapKey() {
+        return actionMapKey;
+    }
 }
