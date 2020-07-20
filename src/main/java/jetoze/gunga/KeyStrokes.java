@@ -2,11 +2,14 @@ package jetoze.gunga;
 
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
 public final class KeyStrokes {
 
+    public static final KeyStroke ENTER = KeyStrokes.forKey(KeyEvent.VK_ENTER);
+    
     public static KeyStroke forKey(int keyCode) {
         return KeyStroke.getKeyStroke(keyCode, 0);
     }

@@ -1,6 +1,6 @@
 package jetoze.gunga.widget;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import jetoze.gunga.DoubleClick;
+import jetoze.gunga.DefaultAction;
 import jetoze.gunga.selection.IndexedSelection;
 import jetoze.gunga.selection.Selection;
 import jetoze.gunga.selection.SelectionListener;
@@ -41,6 +41,8 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     
     private final JList<T> list;
     private final List<SelectionListener<T>> selectionListeners = new ArrayList<>();
+    @Nullable
+    private DefaultAction defaultAction;
     
     public ListWidget() {
         this(new ListWidgetModel<T>());
@@ -154,13 +156,10 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     
     public void setDefaultAction(Action action) {
         requireNonNull(action);
-        // TODO: What if this method is called again, with a different action?
-        // Either allow it, by disposing existing bindings and create new ones, 
-        // or disallow it.
-        // Either way, this is probably something that warrants a common utility
-        // class, something like DefaultActionSupport.
-        DoubleClick.on(list).toRunAction(action);
-        // TODO: ENTER key should work as well.
+        if (defaultAction != null) {
+            defaultAction.dispose();
+        }
+        defaultAction = DefaultAction.install(list, action);
     }
     
     
