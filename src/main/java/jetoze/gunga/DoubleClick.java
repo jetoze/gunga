@@ -43,10 +43,10 @@ public class DoubleClick {
     }
 
     private void handleDoubleClick() {
-        if (!actions.isEmpty()) {
-            ActionEvent e = new ActionEvent(component, ActionEvent.ACTION_FIRST, "actionPerformed");
-            actions.forEach(a -> a.actionPerformed(e));
-        }
+        ActionEvent e = new ActionEvent(component, ActionEvent.ACTION_FIRST, "actionPerformed");
+        actions.stream()
+            .filter(Action::isEnabled)
+            .forEach(a -> a.actionPerformed(e));
     }
     
     public void dispose() {
