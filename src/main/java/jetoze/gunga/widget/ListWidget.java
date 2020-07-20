@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -16,6 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import jetoze.gunga.DoubleClick;
 import jetoze.gunga.selection.IndexedSelection;
 import jetoze.gunga.selection.Selection;
 import jetoze.gunga.selection.SelectionListener;
@@ -148,6 +150,17 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
     public void removeSelectionListener(SelectionListener<T> listener) {
         requireNonNull(listener);
         selectionListeners.remove(listener);
+    }
+    
+    public void setDefaultAction(Action action) {
+        requireNonNull(action);
+        // TODO: What if this method is called again, with a different action?
+        // Either allow it, by disposing existing bindings and create new ones, 
+        // or disallow it.
+        // Either way, this is probably something that warrants a common utility
+        // class, something like DefaultActionSupport.
+        DoubleClick.on(list).toRunAction(action);
+        // TODO: ENTER key should work as well.
     }
     
     
