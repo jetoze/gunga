@@ -1,14 +1,14 @@
 package jetoze.gunga;
 
+import static com.google.common.base.Preconditions.*;
 import static java.util.Objects.requireNonNull;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.swing.Action;
 import javax.swing.JComponent;
 
@@ -20,7 +20,10 @@ public class DoubleClick {
     }
     
     private final JComponent component;
-    private final List<Action> actions = new ArrayList<>();
+    @Nullable
+    private Action action;
+    @Nullable
+    private Runnable job;
     private final MouseListener mouseListener = new MouseAdapter() {
 
         @Override
@@ -38,18 +41,31 @@ public class DoubleClick {
     
     public DoubleClick toRunAction(Action action) {
         requireNonNull(action);
-        this.actions.add(action);
+        checkState(this.action == null, "An Action has already been provided");
+        this.action = action;
+        return this;
+    }
+    
+    public DoubleClick toRun(Runnable job) {
+        requireNonNull(job);
+        checkState(this.job == null, "A Runnable has already been provided");
+        this.job = job;
         return this;
     }
 
     private void handleDoubleClick() {
-        ActionEvent e = new ActionEvent(component, ActionEvent.ACTION_FIRST, "actionPerformed");
-        actions.stream()
-            .filter(Action::isEnabled)
-            .forEach(a -> a.actionPerformed(e));
+        if (action != null && action.isEnabled()) {
+            ActionEvent e = new ActionEvent(component, ActionEvent.ACTION_FIRST, "actionPerformed");
+            action.actionPerformed(e);
+        }
+        if (job != null) {
+            job.run();
+        }
     }
     
     public void dispose() {
         component.removeMouseListener(mouseListener);
+        action = null;
+        job = null;
     }
 }
