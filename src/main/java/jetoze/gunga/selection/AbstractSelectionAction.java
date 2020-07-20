@@ -9,7 +9,7 @@ public abstract class AbstractSelectionAction<T> extends AbstractAction implemen
     @Nullable
     private SelectionSource<T> selectionSource;
     private Selection<T> selection = Selections.emptySelection();
-    private final SelectionListener<T> selectionListener = s -> {};
+    private final SelectionListener<T> selectionListener = this::handleSelection;
     
     public AbstractSelectionAction() {
         handleSelection(Selections.emptySelection());
