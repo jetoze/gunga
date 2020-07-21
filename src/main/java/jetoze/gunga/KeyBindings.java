@@ -53,13 +53,19 @@ public final class KeyBindings {
     }
     
     public KeyBindings add(KeyBinding keyBinding) {
-        Object originalActionMapKey = inputMap.get(keyBinding.getKeyStroke());
-        Action originalAction = actionMap.get(originalActionMapKey);
-        originalKeyBindings.add(new OriginalKeyBinding(
-                keyBinding.getKeyStroke(), originalActionMapKey, originalAction));
+        storeOriginalBinding(keyBinding);
         keyBinding.install(inputMap, actionMap);
         installedKeyBindings.add(keyBinding);
         return this;
+    }
+
+    private void storeOriginalBinding(KeyBinding keyBinding) {
+        Object originalActionMapKey = inputMap.get(keyBinding.getKeyStroke());
+        Action originalAction = (originalActionMapKey != null) 
+                ? actionMap.get(originalActionMapKey)
+                : null;
+        originalKeyBindings.add(new OriginalKeyBinding(
+                keyBinding.getKeyStroke(), originalActionMapKey, originalAction));
     }
     
     public void dispose() {
