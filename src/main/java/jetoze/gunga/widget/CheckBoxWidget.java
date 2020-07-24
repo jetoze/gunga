@@ -2,6 +2,7 @@ package jetoze.gunga.widget;
 
 import static java.util.Objects.*;
 
+import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-public class CheckBoxWidget implements Widget, Selectable {
+public class CheckBoxWidget implements Widget, Customizable, Selectable {
 
     private final JCheckBox checkBox;
     private final List<Consumer<Boolean>> listeners = new ArrayList<>();
@@ -33,18 +34,22 @@ public class CheckBoxWidget implements Widget, Selectable {
         listeners.forEach(lst -> lst.accept(selected));
     }
     
+    @Override
     public boolean isSelected() {
         return checkBox.isSelected();
     }
     
+    @Override
     public void setSelected(boolean selected) {
         checkBox.setSelected(selected);
     }
     
+    @Override
     public void addChangeListener(Consumer<Boolean> listener) {
         this.listeners.add(requireNonNull(listener));
     }
     
+    @Override
     public void removeChangeListener(Consumer<Boolean> listener) {
         this.listeners.remove(requireNonNull(listener));
     }
@@ -59,4 +64,13 @@ public class CheckBoxWidget implements Widget, Selectable {
         checkBox.requestFocusInWindow();
     }
 
+    @Override
+    public Font getFont() {
+        return checkBox.getFont();
+    }
+
+    @Override
+    public void setFont(Font font) {
+        checkBox.setFont(requireNonNull(font));
+    }
 }

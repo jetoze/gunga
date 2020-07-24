@@ -12,7 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-public class PopupMenuButton implements Widget {
+public class PopupMenuButton implements Widget, Customizable {
 
     private final JButton button;
     private final JPopupMenu popupMenu = new JPopupMenu();
@@ -39,6 +39,12 @@ public class PopupMenuButton implements Widget {
         button.requestFocusInWindow();
     }
     
+    @Override
+    public Font getFont() {
+        return button.getFont();
+    }
+    
+    @Override
     public void setFont(Font font) {
         requireNonNull(font);
         button.setFont(font);
