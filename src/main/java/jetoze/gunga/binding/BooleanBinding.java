@@ -5,31 +5,31 @@ import static java.util.Objects.requireNonNull;
 import java.util.function.Consumer;
 
 import jetoze.attribut.Property;
-import jetoze.gunga.widget.CheckBoxWidget;
+import jetoze.gunga.widget.Selectable;
 
 public class BooleanBinding extends AbstractBinding<Boolean> {
 
-    public static BooleanBinding bind(Property<Boolean> property, CheckBoxWidget ui) {
+    public static BooleanBinding bind(Property<Boolean> property, Selectable ui) {
         return new BooleanBinding(property, ui);
     }
 
-    public static BooleanBinding bindAndSyncUi(Property<Boolean> property, CheckBoxWidget ui) {
+    public static BooleanBinding bindAndSyncUi(Property<Boolean> property, Selectable ui) {
         BooleanBinding binding = new BooleanBinding(property, ui);
         binding.syncUi();
         return binding;
     }
     
-    private final CheckBoxWidget ui;
+    private final Selectable ui;
     
     private final Consumer<Boolean> uiListener;
     
-    private BooleanBinding(Property<Boolean> property, CheckBoxWidget ui) {
+    private BooleanBinding(Property<Boolean> property, Selectable ui) {
         super(property);
         this.ui = requireNonNull(ui);
         // XXX: It feels a bit funky to have the new value here, but then letting
         // the base-class add for the value again from syncModel().
         this.uiListener = b -> syncModel();
-        ui.addSelectionListener(uiListener);
+        ui.addChangeListener(uiListener);
     }
     
     @Override
@@ -44,7 +44,6 @@ public class BooleanBinding extends AbstractBinding<Boolean> {
 
     @Override
     protected void removeUiListener() {
-        ui.removeSelectionListener(uiListener);
+        ui.removeChangeListener(uiListener);
     }
-
 }

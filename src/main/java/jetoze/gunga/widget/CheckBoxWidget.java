@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-public class CheckBoxWidget implements Widget {
+public class CheckBoxWidget implements Widget, Selectable {
 
     private final JCheckBox checkBox;
     private final List<Consumer<Boolean>> listeners = new ArrayList<>();
@@ -41,11 +41,11 @@ public class CheckBoxWidget implements Widget {
         checkBox.setSelected(selected);
     }
     
-    public void addSelectionListener(Consumer<Boolean> listener) {
+    public void addChangeListener(Consumer<Boolean> listener) {
         this.listeners.add(requireNonNull(listener));
     }
     
-    public void removeSelectionListener(Consumer<Boolean> listener) {
+    public void removeChangeListener(Consumer<Boolean> listener) {
         this.listeners.remove(requireNonNull(listener));
     }
     
