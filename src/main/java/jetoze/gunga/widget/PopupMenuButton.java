@@ -1,10 +1,12 @@
 package jetoze.gunga.widget;
 
-import static java.util.Objects.*;
+import static com.google.common.base.Preconditions.*;
+import static java.util.Objects.requireNonNull;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -17,8 +19,13 @@ public class PopupMenuButton implements Widget, Customizable {
     private final JButton button;
     private final JPopupMenu popupMenu = new JPopupMenu();
     
+    public PopupMenuButton(String text, JMenuItem... menuItems) {
+        this(text, Arrays.asList(menuItems));
+    }
+    
     public PopupMenuButton(String text, List<JMenuItem> menuItems) {
         this.button = new JButton(text);
+        checkArgument(!menuItems.isEmpty(), "Must provide at least one menu item");
         menuItems.forEach(popupMenu::add);
         button.addMouseListener(new MouseAdapter() {
 
