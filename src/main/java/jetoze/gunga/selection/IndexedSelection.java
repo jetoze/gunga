@@ -1,9 +1,9 @@
 package jetoze.gunga.selection;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 public interface IndexedSelection<T> extends Selection<T> {
 
-    ImmutableSet<Integer> getIndexes();
+    ImmutableList<Integer> getIndexes();
     
 }

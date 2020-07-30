@@ -2,16 +2,13 @@ package jetoze.gunga.selection;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static tzeth.preconds.MorePreconditions.*;
+import static tzeth.preconds.MorePreconditions.checkNotNegative;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public final class Selections {
 
@@ -70,26 +67,26 @@ public final class Selections {
     
     
     private static class IndexedSelectionImpl<T> extends SelectionImpl<T> implements IndexedSelection<T> {
-        private final ImmutableSet<Integer> indexes;
+        private final ImmutableList<Integer> indexes;
 
         public IndexedSelectionImpl() {
-            this.indexes = ImmutableSet.of();
+            this.indexes = ImmutableList.of();
         }
         
-        public IndexedSelectionImpl(ImmutableList<T> items, ImmutableSet<Integer> indexes) {
+        public IndexedSelectionImpl(ImmutableList<T> items, ImmutableList<Integer> indexes) {
             super(items);
             this.indexes = requireNonNull(indexes);
             checkArgument(items.size() == indexes.size(), "Must provide the same number of indexes and items");
         }
 
         @Override
-        public ImmutableSet<Integer> getIndexes() {
+        public ImmutableList<Integer> getIndexes() {
             return indexes;
         }
     }
     
     public static class IndexedSelectionBuilder<T> {
-        private final Set<Integer> indexes = new HashSet<>();
+        private final List<Integer> indexes = new ArrayList<>();
         private final List<T> items = new ArrayList<>();
         
         public IndexedSelectionBuilder<T> add(int index, T item) {
@@ -102,7 +99,7 @@ public final class Selections {
         }
         
         public IndexedSelection<T> build() {
-            return new IndexedSelectionImpl<>(ImmutableList.copyOf(items), ImmutableSet.copyOf(indexes));
+            return new IndexedSelectionImpl<>(ImmutableList.copyOf(items), ImmutableList.copyOf(indexes));
         }
     }
     

@@ -2,7 +2,8 @@ package jetoze.gunga.selection;
 
 public interface SelectionListener<T> {
 
+    // TODO: Also pass along the SelectionSource?
     // TODO: Should this take a Selection<? extends T> as input?
-    public void selectionChanged(Selection<T> selection);
+    void selectionChanged(Selection<T> selection);
     
 }
