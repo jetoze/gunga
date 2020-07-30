@@ -8,8 +8,10 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Vector;
 
+import javax.annotation.Nullable;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.ListCellRenderer;
@@ -43,6 +45,17 @@ public class ComboBoxWidget<T> implements Widget, SelectionSource<T> {
         comboBox.addItemListener(selectionDispatcher);
     }
 
+    public Optional<T> getSelectedItem() {
+        int index = comboBox.getSelectedIndex();
+        return (index >= 0)
+                ? Optional.of(comboBox.getModel().getElementAt(index))
+                : Optional.empty();
+    }
+    
+    public void setSelectedItem(@Nullable T item) {
+        comboBox.setSelectedItem(item);
+    }
+    
     @Override
     public IndexedSelection<T> getSelection() {
         int index = comboBox.getSelectedIndex();
