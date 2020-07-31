@@ -1,6 +1,6 @@
 package jetoze.gunga.widget;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.awt.Font;
@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class PopupMenuButton implements Widget, Customizable {
@@ -19,11 +18,11 @@ public class PopupMenuButton implements Widget, Customizable {
     private final JButton button;
     private final JPopupMenu popupMenu = new JPopupMenu();
     
-    public PopupMenuButton(String text, JMenuItem... menuItems) {
+    public PopupMenuButton(String text, JComponent... menuItems) {
         this(text, Arrays.asList(menuItems));
     }
     
-    public PopupMenuButton(String text, List<JMenuItem> menuItems) {
+    public PopupMenuButton(String text, List<JComponent> menuItems) {
         this.button = new JButton(text);
         checkArgument(!menuItems.isEmpty(), "Must provide at least one menu item");
         menuItems.forEach(popupMenu::add);
