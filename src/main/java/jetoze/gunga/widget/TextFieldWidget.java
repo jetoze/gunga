@@ -110,6 +110,7 @@ public class TextFieldWidget implements TextWidget, Customizable {
     
     
     public static interface Validator {
+        // TODO: Just include isValid() here, and make required a property of TextFieldWidget?
         boolean isRequired();
         boolean isValid(String text);
     }
