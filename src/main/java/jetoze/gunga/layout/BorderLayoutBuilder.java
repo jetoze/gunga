@@ -88,6 +88,6 @@ public final class BorderLayoutBuilder extends AbstractLayoutBuilder<BorderLayou
     }
 
     protected <T extends Container> void addComponents(T container) {
-        components.forEach((constraint, component) -> container.add(component, constraint));
+        components.forEach(container::add);
     }
 }

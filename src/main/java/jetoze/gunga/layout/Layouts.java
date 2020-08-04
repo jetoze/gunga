@@ -19,6 +19,10 @@ public final class Layouts {
         return new BorderLayoutBuilder(hgap, vgap);
     }
     
+    public static FormLayoutBuilder form() {
+        return new FormLayoutBuilder();
+    }
+    
     static JComponent toComponent(Object o) {
         requireNonNull(o);
         if (o instanceof JComponent) {
