@@ -5,23 +5,19 @@ import static java.awt.BorderLayout.EAST;
 import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.BorderLayout.WEST;
-import static java.util.Objects.*;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.LayoutManager;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.RootPaneContainer;
-import javax.swing.border.Border;
 
-public final class BorderLayoutBuilder {
+public final class BorderLayoutBuilder extends AbstractLayoutBuilder<BorderLayoutBuilder> {
 
     private final Map<String, JComponent> components = new HashMap<>();
     private final BorderLayout layout;
-    private Border border;
     
     BorderLayoutBuilder() {
         this(0, 0);
@@ -75,37 +71,23 @@ public final class BorderLayoutBuilder {
         return this;
     }
     
-    public BorderLayoutBuilder withBorder(Border border) {
-        this.border = requireNonNull(border);
-        return this;
-    }
-    
     private BorderLayoutBuilder add(Object object, String where) {
         JComponent component = Layouts.toComponent(object);
         components.put(where, component);
         return this;
     }
     
-    public JPanel build() {
-        return install(new JPanel(layout));
+    @Override
+    protected BorderLayoutBuilder thisBuilder() {
+        return this;
     }
-    
-    private <T extends Container> T install(T container) {
+
+    @Override
+    protected LayoutManager getLayout() {
+        return layout;
+    }
+
+    protected <T extends Container> void addComponents(T container) {
         components.forEach((constraint, component) -> container.add(component, constraint));
-        if (container instanceof JComponent) {
-            ((JComponent) container).setBorder(border);
-        }
-        return container;
     }
-    
-    public <T extends Container> T buildIn(T container) {
-        container.removeAll();
-        container.invalidate();
-        container.setLayout(layout);
-        return install(container);
-    }
-    
-    public void buildAsContent(RootPaneContainer rootPaneContainer) {
-        buildIn(rootPaneContainer.getContentPane());
-    }    
 }
