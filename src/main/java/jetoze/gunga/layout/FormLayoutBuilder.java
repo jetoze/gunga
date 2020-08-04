@@ -15,7 +15,11 @@ import javax.swing.JLabel;
 
 public class FormLayoutBuilder extends AbstractLayoutBuilder<FormLayoutBuilder> {
 
-    // TODO: Add more options, like bold labels and non-JLabel labels.
+    // TODO: Add more options:
+    //          + Bold labels
+    //          + Non-JLabel labels
+    //          + Right-aligned labels
+    //          + Two columns of Label-Component pairs.
     
     private final GridBagLayout layout = new GridBagLayout();
     private final Map<Component, GridBagConstraints> components = new HashMap<>();
