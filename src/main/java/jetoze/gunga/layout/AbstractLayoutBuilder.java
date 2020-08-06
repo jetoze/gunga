@@ -19,6 +19,9 @@ public abstract class AbstractLayoutBuilder<B extends AbstractLayoutBuilder<B>> 
     public final JPanel build() {
         JPanel panel = new JPanel(getLayout());
         addComponents(panel);
+        if (border != null) {
+            panel.setBorder(border);
+        }
         return panel;
     }
     
