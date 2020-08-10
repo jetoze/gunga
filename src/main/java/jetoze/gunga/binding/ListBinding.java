@@ -13,11 +13,7 @@ import jetoze.gunga.widget.ListWidgetModel;
 public class ListBinding<T> extends AbstractBinding<List<T>> {
 
     public static <T> ListBinding<T> bind(Property<List<T>> property, ListWidget<T> ui) {
-        return new ListBinding<T>(property, ui);
-    }
-    
-    public static <T> ListBinding<T> bindAndSyncUi(Property<List<T>> property, ListWidget<T> ui) {
-        ListBinding<T> binding = bind(property, ui);
+        ListBinding<T> binding = new ListBinding<T>(property, ui);
         binding.syncUi();
         return binding;
     }

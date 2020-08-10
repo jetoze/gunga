@@ -10,10 +10,6 @@ import jetoze.gunga.widget.Selectable;
 public class BooleanBinding extends AbstractBinding<Boolean> {
 
     public static BooleanBinding bind(Property<Boolean> property, Selectable ui) {
-        return new BooleanBinding(property, ui);
-    }
-
-    public static BooleanBinding bindAndSyncUi(Property<Boolean> property, Selectable ui) {
         BooleanBinding binding = new BooleanBinding(property, ui);
         binding.syncUi();
         return binding;

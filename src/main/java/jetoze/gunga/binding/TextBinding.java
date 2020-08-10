@@ -11,10 +11,6 @@ import jetoze.gunga.widget.TextWidget;
 public class TextBinding extends AbstractBinding<String> {
     
     public static TextBinding bind(Property<String> property, TextWidget widget) {
-        return new TextBinding(property, widget);
-    }
-    
-    public static TextBinding bindAndSyncUi(Property<String> property, TextWidget widget) {
         TextBinding b = new TextBinding(property, widget);
         b.syncUi();
         return b;
