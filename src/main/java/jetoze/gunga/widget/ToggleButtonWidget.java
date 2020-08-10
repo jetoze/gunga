@@ -1,5 +1,6 @@
 package jetoze.gunga.widget;
 
+import static com.google.common.base.Preconditions.*;
 import static java.util.Objects.requireNonNull;
 
 import java.awt.Font;
@@ -114,6 +115,7 @@ public class ToggleButtonWidget implements Widget, Selectable, Customizable {
     }
     
     public static ButtonGroup makeExclusive(Collection<ToggleButtonWidget> buttons) {
+        checkArgument(buttons.size() >= 2, "Must provide at least two buttons (got %s)", buttons.size());
         ButtonGroup group = new ButtonGroup();
         buttons.forEach(b -> group.add(b.button));
         return group;
