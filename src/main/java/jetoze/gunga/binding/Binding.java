@@ -24,7 +24,7 @@ public interface Binding {
     public static <T> Binding oneWayBinding(Property<T> property, Consumer<? super T> ui) {
         requireNonNull(property);
         requireNonNull(ui);
-        return new AbstractBinding<>(property) {
+        AbstractBinding<T> binding = new AbstractBinding<>(property) {
 
             @Override
             protected void updateUi(T value) {
@@ -37,5 +37,7 @@ public interface Binding {
             }
             
         };
+        binding.syncUi();
+        return binding;
     }
 }
