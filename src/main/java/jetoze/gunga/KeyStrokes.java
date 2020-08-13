@@ -18,6 +18,10 @@ public final class KeyStrokes {
         return KeyStroke.getKeyStroke(c);
     }
     
+    public static KeyStroke ctrlDown(int keyCode) {
+        return KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK);
+    }
+    
     public static KeyStroke commandDown(int keyCode) {
         return KeyStroke.getKeyStroke(keyCode, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     }
