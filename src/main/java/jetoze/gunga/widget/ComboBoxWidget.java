@@ -78,6 +78,12 @@ public class ComboBoxWidget<T> implements Widget, SelectionSource<T> {
             comboBox.setSelectedItem(selection.getItems().get(0));
         }
     }
+    
+    public void selectFirst() {
+        if (comboBox.getModel().getSize() > 0) {
+            comboBox.setSelectedIndex(0);
+        }
+    }
 
     @Override
     public void addSelectionListener(SelectionListener<T> listener) {
