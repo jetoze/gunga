@@ -19,6 +19,26 @@ public final class Layouts {
         return new BorderLayoutBuilder(hgap, vgap);
     }
     
+    public static GridLayoutBuilder grid(int rows, int cols) {
+        return new GridLayoutBuilder(rows, cols);
+    }
+    
+    public static GridLayoutBuilder oneColumnGrid() {
+        return new GridLayoutBuilder(0, 1);
+    }
+    
+    public static GridLayoutBuilder twoColumnGrid() {
+        return new GridLayoutBuilder(0, 2);
+    }
+    
+    public static GridLayoutBuilder oneRowGrid() {
+        return new GridLayoutBuilder(1, 0);
+    }
+    
+    public static GridLayoutBuilder twoRowGrid() {
+        return new GridLayoutBuilder(2, 0);
+    }
+    
     public static FormLayoutBuilder form() {
         return new FormLayoutBuilder();
     }
