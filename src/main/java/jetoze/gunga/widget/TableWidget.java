@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -36,6 +37,14 @@ public class TableWidget implements Widget {
     private void initTable() {
         table.setFillsViewportHeight(true);
         setVisibleRowCount(8);
+    }
+    
+    public TableModel getModel() {
+        return table.getModel();
+    }
+    
+    public void setRowSorter(RowSorter<? extends TableModel> sorter) {
+        table.setRowSorter(sorter);
     }
     
     public void setVisibleRowCount(int visibleRows) {
