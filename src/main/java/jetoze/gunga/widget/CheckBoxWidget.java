@@ -16,6 +16,10 @@ public class CheckBoxWidget implements Widget, Customizable, Selectable {
     private final JCheckBox checkBox;
     private final List<Consumer<Boolean>> listeners = new ArrayList<>();
     
+    public CheckBoxWidget() {
+        this(null, false);
+    }
+    
     public CheckBoxWidget(String text) {
         this(text, false);
     }
