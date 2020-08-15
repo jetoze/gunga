@@ -1,6 +1,7 @@
 package jetoze.gunga.widget;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import com.google.common.collect.ImmutableSet;
 
 import jetoze.gunga.DefaultAction;
 import jetoze.gunga.selection.IndexedSelection;
@@ -80,8 +83,40 @@ public class ListWidget<T> implements Widget, SelectionSource<T> {
         list.setModel(model);
     }
     
-    public void setFilter(@Nullable Predicate<? super T> filter) {
+    /**
+     * Installs a new filter into this list widget.
+     * 
+     * @param filter the new filter, or {@code null} to clear the filter.
+     */
+    public void setFilter(@Nullable Predicate<? super T> filter) { // TODO: Should I accept nulls?
+        // TODO: The current approach for preserving selected items (if they are 
+        // accepted by the new filter) does not take into account the possibility
+        // that the list contains duplicate values.
+        IndexedSelection<T> selection = getSelection();
         getModel().setFilter(filter);
+        if (selection.isEmpty()) {
+            return;
+        }
+        // Those selected items that are still visible (i.e. accepted by the new filter)
+        ImmutableSet<T> selectedItems = selection.getItems().stream()
+                .filter((filter != null) ? filter : t -> true)
+                .collect(toImmutableSet());
+        if (selectedItems.isEmpty()) {
+            setSelection(Selections.emptyIndexedSelection());
+        } else {
+            // TODO: This linear search obviously doesn't perform well.
+            IndexedSelectionBuilder<T> selectionBuilder = Selections.indexedSelectionBuilder();
+            for (int n = 0; n < getModel().getSize(); ++n) {
+                T element = getModel().getElementAt(n);
+                if (selectedItems.contains(element)) {
+                    selectionBuilder.add(n, element);
+                    if (selectionBuilder.size() == selectedItems.size()) {
+                        break;
+                    }
+                }
+            }
+            setSelection(selectionBuilder.build());
+        }
     }
     
     public void setCellRenderer(ListCellRenderer<? super T> renderer) {

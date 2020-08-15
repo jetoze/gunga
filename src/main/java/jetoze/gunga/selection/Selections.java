@@ -101,6 +101,13 @@ public final class Selections {
         public IndexedSelection<T> build() {
             return new IndexedSelectionImpl<>(ImmutableList.copyOf(items), ImmutableList.copyOf(indexes));
         }
+        
+        /**
+         * Returns the number of elements added to this builder so far.
+         */
+        public int size() {
+            return indexes.size();
+        }
     }
     
     

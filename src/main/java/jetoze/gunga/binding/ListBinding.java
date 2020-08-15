@@ -30,7 +30,7 @@ public class ListBinding<T> extends AbstractBinding<List<T>> {
         ListWidgetModel<T> existingModel = ui.getModel();
         Optional<Predicate<? super T>> existingFilter = existingModel.getFilter();
         ListWidgetModel<T> newModel = new ListWidgetModel<>(value);
-        existingFilter.ifPresent(newModel::setFilter);
+        existingFilter.ifPresent(ui::setFilter);
         ui.setModel(newModel);
     }
 

@@ -34,8 +34,16 @@ public class ListWidgetModel<T> extends AbstractListModel<T> {
     public Optional<Predicate<? super T>> getFilter() {
         return Optional.ofNullable(filter);
     }
-    
-    public void setFilter(@Nullable Predicate<? super T> filter) {
+
+    // TODO: I'm package private because calling me directly messes up the
+    // selection model. ListWidget.setFilter restores the original selection
+    // after the new filter has been applied - that should be done if this method
+    // is called directly as well. Once that's in place we can make this method public.
+    // One possible approach is for this method to send some sort of notification, 
+    // e.g. via a ListModelFilterListener. The ListWidget can then install a ListModelFilterListener
+    // on its model (making sure to remove that listener from the original model and install it
+    // on the new model should a new model be installed).
+    void setFilter(@Nullable Predicate<? super T> filter) {
         if (Objects.equals(filter, this.filter)) {
             return;
         }
