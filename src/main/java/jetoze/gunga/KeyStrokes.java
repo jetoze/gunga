@@ -9,6 +9,7 @@ import javax.swing.KeyStroke;
 public final class KeyStrokes {
 
     public static final KeyStroke ENTER = KeyStrokes.forKey(KeyEvent.VK_ENTER);
+    public static final KeyStroke ESCAPE = KeyStrokes.forKey(KeyEvent.VK_ESCAPE);
     
     public static KeyStroke forKey(int keyCode) {
         return KeyStroke.getKeyStroke(keyCode, 0);
