@@ -24,7 +24,11 @@ public class BooleanBinding extends AbstractBinding<Boolean> {
         this.ui = requireNonNull(ui);
         // XXX: It feels a bit funky to have the new value here, but then letting
         // the base-class add for the value again from syncModel().
-        this.uiListener = b -> syncModel();
+        this.uiListener = b -> {
+            if (isUiToModelEnabled()) {
+                syncModel();
+            }
+        };
         ui.addChangeListener(uiListener);
     }
     
