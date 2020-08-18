@@ -77,4 +77,8 @@ public class CheckBoxWidget implements Widget, Customizable, Selectable {
     public void setFont(Font font) {
         checkBox.setFont(requireNonNull(font));
     }
+    
+    public void setEnabled(boolean enabled) {
+        checkBox.setEnabled(enabled);
+    }
 }
