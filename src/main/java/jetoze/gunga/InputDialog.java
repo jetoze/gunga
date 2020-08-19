@@ -4,9 +4,8 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNull;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -37,24 +36,23 @@ public class InputDialog { // TODO: I need a better name.
     private final InputOptions inputOptions;
     private final Supplier<JComponent> contentSupplier;
     private final Focusable focusReceiver;
-    private final boolean modal;
+    
+    private Option selectedOption;
 
     private InputDialog(JFrame owner, String title, Icon icon, InputOptions inputOptions,
-            Supplier<JComponent> contentSupplier, Focusable focusReceiver, boolean modal) {
+            Supplier<JComponent> contentSupplier, Focusable focusReceiver) {
         this.owner = owner;
         this.title = title;
         this.icon = icon;
         this.inputOptions = inputOptions;
         this.contentSupplier = contentSupplier;
         this.focusReceiver = focusReceiver;
-        this.modal = modal;
     }
 
-    // TODO: This method should return the selected Option.
-    public void open() {
-        JDialog dialog = new JDialog(owner, title, modal);
+    public Option open() {
+        JDialog dialog = new JDialog(owner, title, true);
         
-        ActionListener dialogCloser = e -> dialog.setVisible(false);
+        ButtonListener dialogCloser = new ButtonListener(dialog);
         JButton[] buttons = inputOptions.getButtons().toArray(new JButton[0]);
         Arrays.stream(buttons).forEach(b -> b.addActionListener(dialogCloser));
         JButton defaultButton = inputOptions.getDefaultButton();
@@ -77,21 +75,42 @@ public class InputDialog { // TODO: I need a better name.
                 UiThread.runLater(focusReceiver::requestFocus);
             }
         });
-        // Using a ComponentListener rather than a WindowListener because I've observed
-        // that the WindowListener isn't notified consistently when the dialog is closed.
-        dialog.addComponentListener(new ComponentAdapter() {
-            
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                Arrays.stream(buttons).forEach(b -> b.removeActionListener(dialogCloser));
-            }
-        });
         KeyBindings.whenAncestorOfFocusedComponent(dialog.getRootPane())
             .add(KeyStrokes.ESCAPE, "escape", () -> {
+                selectedOption = inputOptions.escapeOption;
                 UiThread.runLater(inputOptions.getJobToRunOnEscape());
                 dialog.setVisible(false);
             });
         dialog.setVisible(true);
+        // The dialog is modal, so the thread blocks here until the dialog is dismissed.
+        // --> We can do necessary cleanup work here.
+        Arrays.stream(buttons).forEach(b -> b.removeActionListener(dialogCloser));
+        assert selectedOption != null;
+        return selectedOption;
+    }
+    
+    
+    private class ButtonListener implements ActionListener {
+        private final JDialog dialog;
+
+        public ButtonListener(JDialog dialog) {
+            this.dialog = dialog;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            InputDialog.this.selectedOption = getSelectedOption(e);
+            dialog.setVisible(false);
+        }
+        
+        private Option getSelectedOption(ActionEvent e) {
+            for (MaterializedOption mo : inputOptions.options) {
+                if (e.getSource() == mo.button) {
+                    return mo.option;
+                }
+            }
+            throw new RuntimeException("Unknown button was clicked to close the dialog");
+        }
     }
     
 
@@ -223,7 +242,6 @@ public class InputDialog { // TODO: I need a better name.
         private String title;
         @Nullable
         private Icon icon;
-        private boolean modal = true;
 
         private DialogBuilder(InputOptions inputOptions) {
             this.inputOptions = requireNonNull(inputOptions);
@@ -258,14 +276,9 @@ public class InputDialog { // TODO: I need a better name.
             return this;
         }
         
-        public DialogBuilder modeless() {
-            this.modal = false;
-            return this;
-        }
-        
         public InputDialog build() {
             checkState(contentSupplier != null, "Must provide the content before building the dialog");
-            return new InputDialog(owner, title, icon, inputOptions, contentSupplier, focusReceiver, modal);
+            return new InputDialog(owner, title, icon, inputOptions, contentSupplier, focusReceiver);
         }
     }
 }
